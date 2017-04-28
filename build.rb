@@ -6,13 +6,21 @@ $user_id = '16597993'
 def print_shelf(shelf_name)
   shelf = $client.shelf($user_id, shelf_name)
   shelf.books[1..10].each do |review|
-    link = "<a href='#{review.book.url}'>#{review.book.title}</a>"
-    puts "#{review.date_updated[4..9]} #{review.date_updated[26..30]} - #{link}"
+    link = "<a href='#{review.book.link}'>#{review.book.title}</a>"
+    puts "<li>"
+    puts "<b>#{review.date_updated[4..9]} #{review.date_updated[26..30]}</b> - #{link}"
+    puts "</li>"
   end
 end
 
-puts "Currently Reading"
+puts "<div class='post'>"
+puts "<h2>Currently Reading</h2>"
+puts "<ul style='list-style:none'>"
 print_shelf('currently-reading')
+puts "</ul>"
 
-puts "Last read"
+puts "<h2>Last read</h2>"
+puts "<ul style='list-style:none'>"
 print_shelf('read')
+puts "</ul>"
+puts "</div>"
