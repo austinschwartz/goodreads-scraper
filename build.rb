@@ -4,20 +4,23 @@ $client = Goodreads.new(api_key: "API_KEY_HERE")
 $user_id = '16597993'
 
 def get_shelf(shelf_name)
-  ret = []
-  shelf = $client.shelf($user_id, shelf_name)
   key = 'date_updated'
   if shelf_name == 'read' then
     key = 'read_at'
   end
-  shelf.books[1..10].each do |review|
-    link = "<a href='#{review.book.link}'>#{review.book.title}</a>"
-    if shelf_name == 'read' then
-      if review.key?("read_at") and review.read_at != nil and review.read_at != "" then
+  ret = []
+  shelf = $client.shelf($user_id, shelf_name)
+  (shelf.start..shelf.end).each do |page|
+    shelf = $client.shelf($user_id, shelf_name, page: page)
+    shelf.books.each do |review|
+      link = "<a href='#{review.book.link}'>#{review.book.title}</a>"
+      if shelf_name == 'read' then
+        if review.key?("read_at") and review.read_at != nil and review.read_at != "" then
+          ret << review
+        end
+      else
         ret << review
       end
-    else
-      ret << review
     end
   end
   ret.sort_by{|review| DateTime.strptime(review[key], '%a %b %d %H:%M:%S %z %Y')}.reverse
