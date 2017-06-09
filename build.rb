@@ -1,7 +1,7 @@
 require 'goodreads'
+require 'set'
 
-#$client = Goodreads.new(api_key: "API_KEY_HERE")
-$client = Goodreads.new(api_key: "lxDTg6Ex25htz9igx5Cl3A")
+$client = Goodreads.new(api_key: "API_KEY_HERE")
 $user_id = '16597993'
 
 def get_shelf(shelf_name)
@@ -27,29 +27,35 @@ def get_shelf(shelf_name)
   ret.sort_by{|review| DateTime.strptime(review[key], '%a %b %d %H:%M:%S %z %Y')}.reverse
 end
 
-def print_shelf(shelf,include_date=FALSE)
-  shelf.first(5).each do |review|
+def print_shelf(shelf, include_date=FALSE, count=5, favorites_set=Set.new)
+  shelf.first(count).each do |review|
     print "<li>"
     if include_date then
-      print "<b>#{review.date_updated[4..9]} #{review.date_updated[26..30]}</b> - "
+      new_date = DateTime.strptime(review.read_at, '%a %b %d %H:%M:%S %z %Y')
+      print "<code>#{new_date.strftime('%m/%d/%y')}</code>"
     end
+    print "<i><b>" if favorites_set.include? review.id
     print "<a href=\"#{review.book.link}\">#{review.book.title}</a>"
+    print "</b></i>" if favorites_set.include? review.id
     print "</li>"
     puts ""
   end
 end
 
+favorites_set = get_shelf('favorites').map{|review| review.id}
 currently_reading = get_shelf('currently-reading')
 read = get_shelf('read')
 
 puts "<div class='post'>"
 puts "<h2>Currently Reading</h2>"
-puts "<ul style='list-style:none'>"
-print_shelf(currently_reading)
+puts "<ul>"
+print_shelf(currently_reading, include_date=FALSE, count=5, favorites_set=favorites_set)
 puts "</ul>"
 
 puts "<h2>Last read</h2>"
 puts "<ul style='list-style:none'>"
-print_shelf(read, TRUE)
+print_shelf(read, include_date=TRUE, count=20, favorites_set=favorites_set)
 puts "</ul>"
+puts "This list automatically generated from my <a href=\"https://www.goodreads.com/user/show/16597993-austin\">my goodreads account</a> by <a href=\"https://github.com/nonis3/goodreads-scraper\">this script</a>. Books in italics are tagged on goodreads as those I particularly liked."
 puts "</div>"
+
