@@ -60,6 +60,6 @@ puts "<table class='books'>"
 print_shelf(read, include_date=TRUE, count=20, favorites_set=favorites_set)
 puts "</table>"
 puts "</br>"
-puts "This list automatically generated from my <a href=\"https://www.goodreads.com/user/show/16597993-austin\">my goodreads account</a> by <a href=\"https://github.com/nonis3/goodreads-scraper\">this script</a>. Books in italics are tagged on goodreads as those I particularly liked."
+puts "This list is automatically generated from my <a href=\"https://www.goodreads.com/user/show/16597993-austin\">my goodreads account</a> by <a href=\"https://github.com/nonis3/goodreads-scraper\">this script</a>. Books in italics are tagged on goodreads as those I particularly liked."
 puts "</div>"
 
