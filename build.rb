@@ -37,7 +37,7 @@ def print_shelf(shelf, include_date=FALSE, count=5, favorites_set=Set.new)
     print "<td>" if include_date
     puts "<li>" if !include_date
     print "<i><b>" if favorites_set.include? review.id
-    print "<a href=\"#{review.book.link}\">#{review.book.title}</a>"
+    print "<a href=\"#{review.book.link}\"><i>#{review.book.title}</i></a> <span class='author'>by #{review.book.authors.author.name}</span>"
     print "</b></i>" if favorites_set.include? review.id
     print "</li>" if !include_date
     print "</td></tr>" if include_date
@@ -60,6 +60,6 @@ puts "<table class='books'>"
 print_shelf(read, include_date=TRUE, count=20, favorites_set=favorites_set)
 puts "</table>"
 puts "</br>"
-puts "This list is automatically generated from my <a href=\"https://www.goodreads.com/user/show/16597993-austin\">my goodreads account</a> by <a href=\"https://github.com/nonis3/goodreads-scraper\">this script</a>. Books in italics are tagged on goodreads as those I particularly liked."
+puts "This list is automatically generated from my <a href=\"https://www.goodreads.com/user/show/16597993-austin\">my goodreads account</a> by <a href=\"https://github.com/austinschwartz/goodreads-scraper\">this script</a>. Books in italics are tagged on goodreads as those I particularly liked."
 puts "</div>"
 
