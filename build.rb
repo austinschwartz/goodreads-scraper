@@ -27,20 +27,20 @@ def get_shelf(shelf_name)
   ret.sort_by{|review| DateTime.strptime(review[key], '%a %b %d %H:%M:%S %z %Y')}.reverse
 end
 
-def print_shelf(shelf, include_date=FALSE, count=5, favorites_set=Set.new)
+def print_shelf(shelf, count=5, favorites_set=Set.new)
   shelf.first(count).each do |review|
-    print "<tr>" if include_date
-    if include_date then
+    print "<tr>"
+    if review.read_at != nil then
       new_date = DateTime.strptime(review.read_at, '%a %b %d %H:%M:%S %z %Y')
-      print "<td><code style=\"vertical-align:bottom\">#{new_date.strftime('%m/%d/%y')}</code></td>"
+    else
+      new_date = DateTime.strptime(review.date_updated, '%a %b %d %H:%M:%S %z %Y')
     end
-    print "<td>" if include_date
-    puts "<li>" if !include_date
+    print "<td><code style=\"vertical-align:bottom\">#{new_date.strftime('%m/%d/%y')}</code></td>"
+    print "<td>"
     print "<i><b>" if favorites_set.include? review.id
     print "<a href=\"#{review.book.link}\"><i>#{review.book.title}</i></a> <span class='author'>by #{review.book.authors.author.name}</span>"
     print "</b></i>" if favorites_set.include? review.id
-    print "</li>" if !include_date
-    print "</td></tr>" if include_date
+    print "</td></tr>"
     puts ""
   end
 end
@@ -51,13 +51,13 @@ read = get_shelf('read')
 
 puts "<div class='post'>"
 puts "<h2>Currently Reading</h2>"
-puts "<ul>"
-print_shelf(currently_reading, include_date=FALSE, count=5, favorites_set=favorites_set)
-puts "</ul>"
+puts "<table class='books'>"
+print_shelf(currently_reading, count=5, favorites_set=favorites_set)
+puts "</table>"
 
 puts "<h2>Last read</h2>"
 puts "<table class='books'>"
-print_shelf(read, include_date=TRUE, count=20, favorites_set=favorites_set)
+print_shelf(read, count=20, favorites_set=favorites_set)
 puts "</table>"
 puts "</br>"
 puts "This list is automatically generated from my <a href=\"https://www.goodreads.com/user/show/16597993-austin\">my goodreads account</a> by <a href=\"https://github.com/austinschwartz/goodreads-scraper\">this script</a>. Books in italics are tagged on goodreads as those I particularly liked."
